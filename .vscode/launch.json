@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "name": "Game of Life",
+            "type": "python",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal"
+        }
+    ]
+}
