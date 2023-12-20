@@ -1,3 +1,5 @@
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/xIY2FMKf)
+[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=13274103&assignment_repo_type=AssignmentRepo)
 # Game of Life
 
 Your task is to create a [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life). Please read the Wikipedia article carefully to understand the game rules. You can also watch the video with an explanation of Conway's Game of Life from John Conway himself:
