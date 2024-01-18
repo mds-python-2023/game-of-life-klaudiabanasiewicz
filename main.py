@@ -89,7 +89,6 @@ def show_start_screen(screen, font):
                     running = True
                     show_image = False
                 
-
         if show_image:
             screen.blit(key_shorts_table, key_shorts_table_rect)
 
@@ -169,7 +168,7 @@ def main():
                         board = load_board(file_path)
                         if board:
                             game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, file_path=file_path)
-                    elif event.key == pygame.K_2:  # Load board from file - gosper glider gun
+                    elif event.key == pygame.K_2:  # Load board from file S- gosper glider gun
                         file_path = 'sample_patterns/gosper-glider-gun.txt'  
                         board = load_board(file_path)
                         if board:
@@ -181,11 +180,13 @@ def main():
                             game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, file_path=file_path)
                     elif event.key == pygame.K_ESCAPE:  # Return to the start screen
                             in_start_screen = True
+            
+            draw_board(screen, game)
+            draw_grid(screen)
 
             if not paused:
-                draw_board(screen, game)
-                draw_grid(screen)
                 game.update_board()
+
             pygame.display.flip()
             clock.tick(speed) # Controls the speed
 

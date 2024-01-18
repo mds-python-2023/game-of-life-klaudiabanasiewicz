@@ -15,7 +15,16 @@ class GameOfLife:
     def load_board_from_file(self, file_path):
         with open(file_path, 'r') as file:
             lines = file.readlines()
-            return np.array([[1 if char == 'X' else 0 for char in line.strip()] for line in lines])
+            if file_path == 'sample_patterns/glider.txt':
+                return np.hstack((np.zeros((51, 15)), np.vstack((np.zeros((20, 100)), np.array([[1 if char == 'X' else 0 for char in line.strip()] for line in lines])))))
+            elif file_path == 'sample_patterns/gosper-glider-gun.txt':
+                return np.vstack((np.array([[1 if char == 'X' else 0 for char in line.strip()] for line in lines]), np.zeros((7, 100))))
+            elif file_path == 'sample_patterns/pulsar.txt':
+                new_array = np.vstack((np.zeros((3, 100)), np.array([[1 if char == 'X' else 0 for char in line.strip()] for line in lines]), np.zeros((5, 100))))
+                return new_array[:, 16:]
+            else:
+                return np.array([[1 if char == 'X' else 0 for char in line.strip()] for line in lines])
+                
 
     def update_board(self):
         new_board = self.board.copy()
