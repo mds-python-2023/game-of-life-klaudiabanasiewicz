@@ -26,3 +26,8 @@ def load_board(file_path):
         print(f"Error loading board: {e}")
         return None
 
+def save_board_to_file(game, file_path):
+    with open(file_path, 'w') as file:
+        for row in game.board:
+            line = ''.join(['X' if cell == 1 else '.' for cell in row])
+            file.write(line + '\n')

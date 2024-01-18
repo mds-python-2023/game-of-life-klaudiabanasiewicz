@@ -23,7 +23,7 @@ class GameOfLife:
                 new_array = np.vstack((np.zeros((3, 100)), np.array([[1 if char == 'X' else 0 for char in line.strip()] for line in lines]), np.zeros((5, 100))))
                 return new_array[:, 16:]
             else:
-                return np.array([[1 if char == 'X' else 0 for char in line.strip()] for line in lines])  
+                return np.array([[1 if char == 'X' else 0 for char in line.strip()] for line in lines])
 
     def update_board(self):
         if not self.is_board_valid():
