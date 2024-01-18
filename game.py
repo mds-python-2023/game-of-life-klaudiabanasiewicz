@@ -23,10 +23,11 @@ class GameOfLife:
                 new_array = np.vstack((np.zeros((3, 100)), np.array([[1 if char == 'X' else 0 for char in line.strip()] for line in lines]), np.zeros((5, 100))))
                 return new_array[:, 16:]
             else:
-                return np.array([[1 if char == 'X' else 0 for char in line.strip()] for line in lines])
-                
+                return np.array([[1 if char == 'X' else 0 for char in line.strip()] for line in lines])  
 
     def update_board(self):
+        if not self.is_board_valid():
+            raise ValueError("Invalid board state")
         new_board = self.board.copy()
         for i in range(self.board.shape[0]):
             for j in range(self.board.shape[1]):
@@ -44,3 +45,12 @@ class GameOfLife:
 
     def get_board(self):
         return self.board
+    
+    def is_board_valid(self):
+        if not isinstance(self.board, np.ndarray):
+            return False
+        if self.board.ndim != 2:
+            return False
+        if not np.all(np.isin(self.board, [0, 1])):
+            return False
+        return True

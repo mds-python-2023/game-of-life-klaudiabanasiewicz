@@ -1,11 +1,28 @@
+import os
+
 def load_board(file_path):
+    if not os.path.isfile(file_path):
+        print(f"Error: {file_path} is not a valid file.")
+        return None
+
     board = []
+    line_length = None
     try:
         with open(file_path, 'r') as file:
             for line in file:
+                if line_length is None:
+                    line_length = len(line.strip())
+                elif len(line.strip()) != line_length:
+                    print(f"Error: Inconsistent line lengths in board file.")
+                    return None
+
                 board_line = [1 if char == 'X' else 0 for char in line.strip()]
+                if not all(char in ['X', '.'] for char in line.strip()):
+                    print(f"Error: Invalid character in board file.")
+                    return None
                 board.append(board_line)
         return board
-    except FileNotFoundError:
-        print(f"Error: The file {file_path} was not found.")
+    except Exception as e:
+        print(f"Error loading board: {e}")
         return None
+

@@ -36,8 +36,6 @@ def show_start_screen(screen, font):
     while running:
         screen.blit(background_image, (0, 0))
 
-        # main_text_surface = pygame.Surface((500, 80))
-        # main_text_rect = main_text_surface.get_rect(center=(400, 100))
         start_button_surface = pygame.Surface((250, 70))
         start_button_rect = start_button_surface.get_rect(center=(400, 225))
         exit_button_surface = pygame.Surface((200, 70))
@@ -45,29 +43,18 @@ def show_start_screen(screen, font):
         keyshorts_button_surface = pygame.Surface((450, 70))
         keyshorts_button_rect = keyshorts_button_surface.get_rect(center=(400, 425))
 
-        main_text_color = (0, 0, 0)
         start_button_color = (134,243,32,255)
         exit_button_color = (236,17,48,255)
         keyshorts_button_color = (254,137,47,255)
-
-        # start_button = font.render('Start', True, WHITE)
-        # exit_button = font.render('Exit', True, WHITE)
 
         font = pygame.font.Font('ka1.ttf', 75)
         main_text = font.render("Game of Life", True, BLACK)
         main_text_rect = main_text.get_rect(center=(400, 100))
         screen.blit(main_text, main_text_rect)
 
-        # draw_button(screen, main_text_surface, main_text_rect, main_text_color, "Game of Life", font_size=75, color_text=WHITE)
         draw_button(screen, start_button_surface, start_button_rect, start_button_color, "Start", color_text=BLACK)
         draw_button(screen, keyshorts_button_surface, keyshorts_button_rect, keyshorts_button_color, "Key Commands", font_size=40, color_text=BLACK)
         draw_button(screen, exit_button_surface, exit_button_rect, exit_button_color, "Exit", color_text=BLACK)
-
-        # start_button_rect = start_button.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 50))
-        # exit_button_rect = exit_button.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 50))
-
-        # screen.blit(start_button, start_button_rect)
-        # screen.blit(exit_button, exit_button_rect)
 
         key_shorts_table = pygame.image.load('key_commands.png')
         key_shorts_table = pygame.transform.scale(key_shorts_table, (WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -180,6 +167,14 @@ def main():
                             game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, file_path=file_path)
                     elif event.key == pygame.K_ESCAPE:  # Return to the start screen
                             in_start_screen = True
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    cell_x, cell_y = mouse_pos[0] // CELL_SIZE, mouse_pos[1] // CELL_SIZE
+
+                    if event.button == 1:  # Left mouse
+                        game.board[cell_y][cell_x] = 1  # Add cell
+                    elif event.button == 3:  # Right mouse
+                        game.board[cell_y][cell_x] = 0  # Remove cell
             
             draw_board(screen, game)
             draw_grid(screen)
