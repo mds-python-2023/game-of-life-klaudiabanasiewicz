@@ -1,19 +1,38 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/xIY2FMKf)
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=13274103&assignment_repo_type=AssignmentRepo)
-# Game of Life
+# Conway's Game of Life 🦕
 
-Your task is to create a [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life). Please read the Wikipedia article carefully to understand the game rules. You can also watch the video with an explanation of Conway's Game of Life from John Conway himself:
+Welcome to the Conway's Game of Life implementation! This is a cellular automaton devised by John Conway, which simulates the lives and interactions of cells in a grid-like universe.
 
-[![Does John Conway hate his Game of Life?](https://img.youtube.com/vi/E8kUJL04ELA/0.jpg)](https://www.youtube.com/watch?v=E8kUJL04ELA)
+## Features 🎮
+- **Vibrant Pixel Art**: Enjoy a colorful and lively pixel art interface.
+- **Customizable Gameplay**: Change cell colors, background, and speed to your liking.
+- **Control Your Universe**: Save and load game states, or randomize the board to start a new.
+- **Interactivity**: Use your mouse to add or remove cells in real-time.
+- **Preloaded Configurations**: Explore complex structures with preloaded boards such as glider, gosper glider gun, and pulsar.
 
-The user should be able to load a predefined board (see `sample_patterns` folder for the file format) or start the animation from the randomly generated one (of specified size).
+## Controls 🕹️
+- `C`: Change cell color
+- `B`: Change background color
+- `W`: Reset colors to default
+- `S`: Save game state
+- `L`: Load game state
+- `UP ARROW`: Increase speed
+- `DOWN ARROW`: Decrease speed
+- `R`: Randomize board
+- `P`: Pause or resume the game
+- `1`, `2`, `3`: Load specific board configurations
+- `ESCAPE`: Return to the previous screen
+- `LEFT MOUSE`: Add cell
+- `RIGHT MOUSE`: Remove cell
 
-In the most basic version you can just print `#` and `.` on a screen. However, this will result in the minimal mark. It is much better to use some graphics library (e.g. Matplotlib with [animations](https://jakevdp.github.io/blog/2012/08/18/matplotlib-animation-tutorial/) and [`imshow`](https://matplotlib.org/api/_as_gen/matplotlib.pyplot.imshow.html)) or any other library of your choice).
+You can also refer to the included `key_commands.png` for the list of keyboard and mouse controls in the form of table.
 
-Use whichever libraries or you need. Give it your own personal style. However, please mind that the quality of our code will be assessed. In any case, your code **must** provide a good separation between the logic and the presentation layer.
+## Quick Start 💾
+1. Clone the repository.
+2. Install dependencies: `pip install -r requirements.txt`
+3. Run the game: `python main.py`
 
-The main code must be run in the `main.py` file.
-
-<hr/>
-
-Change the contents of this `README.md` file to the elegant description of your project.
+## Credits and Acknowledgments 🌟
+- Background art provided in `background_image_1.png`.
+- Custom pixel font utilized from `pixel_font.ttf`.
+- Game logic and UI handled by `game.py` and `gui_helpers.py`.
+- Preconfigured boards and game settings can be loaded with `board_loader.py`.

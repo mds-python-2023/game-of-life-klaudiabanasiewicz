@@ -1,6 +1,8 @@
 from constants import *
 import pygame
 import sys
+import tkinter as tk
+from tkinter import messagebox
 
 def draw_grid(screen):
     for x in range(0, WINDOW_WIDTH, CELL_SIZE):
@@ -9,12 +11,26 @@ def draw_grid(screen):
         pygame.draw.line(screen, GRAY, (0, y), (WINDOW_WIDTH, y))
 
 def draw_button(screen, surface, rect, color, text, font_size=50, color_text=BLACK):
-    surface.fill(color)
-    screen.blit(surface, rect)
-    font = pygame.font.Font('ka1.ttf', font_size)
-    text_surface = font.render(text, True, color_text)
-    text_rect = text_surface.get_rect(center=rect.center)
-    screen.blit(text_surface, text_rect)
+    try:
+        if not (isinstance(screen, pygame.Surface) and isinstance(surface, pygame.Surface)):
+            raise TypeError("Invalid screen or button surface provided.")
+
+        if not (isinstance(rect, pygame.Rect) and isinstance(color, tuple)):
+            raise TypeError("Invalid button rectangle or color provided.")
+        surface.fill(color)
+        screen.blit(surface, rect)
+        font = pygame.font.Font('pixel_font.ttf', font_size)
+        text_surface = font.render(text, True, color_text)
+        text_rect = text_surface.get_rect(center=rect.center)
+        screen.blit(text_surface, text_rect)
+    except Exception as e:
+        showError(f"Error in with drawing the button: {e}")
+
+def showError(message):
+    root = tk.Tk()
+    root.withdraw()
+    messagebox.showerror("Error", message)
+    root.destroy()
 
 def show_start_screen(screen, font):
     background_image = pygame.image.load('background_image_1.png')
@@ -35,7 +51,7 @@ def show_start_screen(screen, font):
         exit_button_color = (236,17,48,255)
         keyshorts_button_color = (254,137,47,255)
 
-        font = pygame.font.Font('ka1.ttf', 75)
+        font = pygame.font.Font('pixel_font.ttf', 75)
         main_text = font.render("Game of Life", True, BLACK)
         main_text_rect = main_text.get_rect(center=(400, 100))
         screen.blit(main_text, main_text_rect)
@@ -126,6 +142,8 @@ def input_box(screen, font):
     birth_color = (254,137,47,255)
     submit_color = (134,243,32,255)
 
+    active_box = None
+
     while running:
         screen.blit(background_image, (0, 0))
 
@@ -167,10 +185,9 @@ def input_box(screen, font):
                     if valid_survival and valid_birth:
                         survival_list = [int(char) for char in survival_text if char.isdigit()]
                         birth_list = [int(char) for char in birth_text if char.isdigit()]
-                        print(f"Survival Rules: {survival_list}, Birth Rules: {birth_list}")
                         return ('custom_game', survival_list, birth_list)
                     else:
-                        print("Invalid rules. Please enter a valid set of digits (0-8).")
+                        showError("Invalid rules. Please enter a valid set of digits (0-8).")
                 elif back_button_rect.collidepoint(event.pos):
                     return ("back", [2, 3], [3])
                 else:
@@ -183,6 +200,8 @@ def input_box(screen, font):
                         survival_text += event.unicode
                     elif event.unicode.isdigit() and len(survival_text) >= 6:
                         pass
+                    elif event.key == pygame.K_ESCAPE:
+                        return ("back", [2, 3], [3])
                 elif active_box == 'birth':
                     if event.key == pygame.K_BACKSPACE:
                         birth_text = birth_text[:-1]
@@ -190,8 +209,10 @@ def input_box(screen, font):
                         birth_text += event.unicode
                     elif event.unicode.isdigit() and len(birth_text) >= 6:
                         pass
+                    elif event.key == pygame.K_ESCAPE:
+                        return ("back", [2, 3], [3])
                 elif event.key == pygame.K_ESCAPE:
-                    return 'back'
+                    return ("back", [2, 3], [3])
 
 
         pygame.display.flip()

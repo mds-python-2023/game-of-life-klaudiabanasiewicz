@@ -29,10 +29,14 @@ def main():
     global DEAD_COLOR
     
     clock = pygame.time.Clock()
-    pygame.init()
-    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-    pygame.display.set_caption("klaudusia's Game of Life")
-    font = pygame.font.Font('ka1.ttf', 50)
+    try:
+        pygame.init()
+        screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+        pygame.display.set_caption("Game of Life 🦕")
+        font = pygame.font.Font('pixel_font.ttf', 50)
+    except Exception as e:
+        showError(f'Failed to initialize game components: {e}')
+        sys.exit(1)
 
     current_state = START_SCREEN
     game = None
@@ -42,33 +46,30 @@ def main():
     while True:
         if current_state == START_SCREEN:
             action = show_start_screen(screen, font)
-            if action == 'start':
+            if action == 'start':   # Open the middle screen
                 current_state = MIDDLE_SCREEN
-            elif action == 'exit':
+            elif action == 'exit':   # Close the program
                 break
 
         elif current_state == MIDDLE_SCREEN:
             action = show_middle_screen(screen, font)
-            if action == 'back':
+            if action == 'back':  # Return to the start screen
                 current_state = START_SCREEN
-            elif action == 'normal_rules':
+            elif action == 'normal_rules':   # Start the game with normal rules
                 current_state = GAME
-            elif action == 'custom_rules':
+                game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, randomize=True) 
+            elif action == 'custom_rules':   # Open the window with input boxes
                 current_state = INPUT_BOX
         
         elif current_state == INPUT_BOX:
             action, custom_survival_rules, custom_birth_rules = input_box(screen, font)
-            if action == 'back':
+            if action == 'back':   # Return to the middle screen
                 current_state = MIDDLE_SCREEN
-            if action == "custom_game":
+            if action == "custom_game":   # Start the game with custom rules
                 current_state = CUSTOM_GAME
+                game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, randomize=True, survival_rules=custom_survival_rules, birth_rules=custom_birth_rules) 
 
         elif current_state == GAME or current_state == CUSTOM_GAME:
-            if game is None:  # Initialize the game if not already done
-                if current_state == GAME:
-                    game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, randomize=True) 
-                elif current_state == CUSTOM_GAME:
-                    game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, randomize=True, survival_rules=custom_survival_rules, birth_rules=custom_birth_rules) 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -84,15 +85,18 @@ def main():
                     elif event.key == pygame.K_s:  # Save game state
                         save_board_to_file(game, 'saved_game.txt') 
                     elif event.key == pygame.K_l:  # Load game state
-                        game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, file_path="saved_game.txt")
+                        if current_state == GAME:   # Load from saved file with normal rules
+                            game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, file_path="saved_game.txt")
+                        elif current_state == CUSTOM_GAME:   # Load from saved file with custom rules
+                            game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, file_path="saved_game.txt", survival_rules=custom_survival_rules, birth_rules=custom_birth_rules) 
                     elif event.key == pygame.K_UP:   # Increase speed
                         speed += 5
                     elif event.key == pygame.K_DOWN:  # Decrease speed
                         speed = max(5, speed - 5)
                     elif event.key == pygame.K_r:  # Randomize board
-                        if current_state == GAME:
+                        if current_state == GAME:   # Random board with normal rules
                             game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, randomize=True) 
-                        elif current_state == CUSTOM_GAME:
+                        elif current_state == CUSTOM_GAME:   # Random board with custom rules
                             game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, randomize=True, survival_rules=custom_survival_rules, birth_rules=custom_birth_rules) 
                     elif event.key == pygame.K_p:  # Pause or resume the game
                         paused = not paused
@@ -100,19 +104,31 @@ def main():
                         file_path = 'sample_patterns/glider.txt'
                         board = load_board(file_path)
                         if board:
-                            game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, file_path=file_path)
-                    elif event.key == pygame.K_2:  # Load board from file S- gosper glider gun
+                            if current_state == GAME:   # Glider with normal rules
+                                game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, file_path=file_path)
+                            elif current_state == CUSTOM_GAME:   # Glider with custom rules
+                                game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, file_path=file_path, survival_rules=custom_survival_rules, birth_rules=custom_birth_rules)
+                    elif event.key == pygame.K_2:  # Load board from file - gosper glider gun
                         file_path = 'sample_patterns/gosper-glider-gun.txt'  
                         board = load_board(file_path)
                         if board:
-                            game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, file_path=file_path)
+                            if current_state == GAME:   # Gosper glider gun with normal rules
+                                game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, file_path=file_path)
+                            elif current_state == CUSTOM_GAME:   # Gosper glider gun with custom rules
+                                game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, file_path=file_path, survival_rules=custom_survival_rules, birth_rules=custom_birth_rules)
                     elif event.key == pygame.K_3:  # Load board from file - pulsar
                         file_path = 'sample_patterns/pulsar.txt'
                         board = load_board(file_path)
                         if board:
-                            game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, file_path=file_path)
-                    elif event.key == pygame.K_ESCAPE:  # Return to the start screen
+                            if current_state == GAME:   # Pulsar with normal rules
+                                game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, file_path=file_path)
+                            elif current_state == CUSTOM_GAME:   # Pulsar with custom rules
+                                game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, file_path=file_path, survival_rules=custom_survival_rules, birth_rules=custom_birth_rules)
+                    elif event.key == pygame.K_ESCAPE:  # Return to the middle screen
                             current_state = MIDDLE_SCREEN
+                            GameOfLife.survival_rules=[2, 3]
+                            GameOfLife.birth_rules=[3]
+                            
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
                     cell_x, cell_y = mouse_pos[0] // CELL_SIZE, mouse_pos[1] // CELL_SIZE

@@ -1,13 +1,15 @@
 import os
+from gui_helpers import showError
 
 def load_board(file_path):
-    if not os.path.isfile(file_path):
-        print(f"Error: {file_path} is not a valid file.")
-        return None
-
-    board = []
-    line_length = None
     try:
+        if not os.path.exists(file_path):
+            showError(f"{FileNotFoundError}: Board file {file_path} does not exist.")
+        if not os.path.isfile(file_path):
+            showError(f"Error: {file_path} is not a valid file.")
+
+        board = []
+        line_length = None
         with open(file_path, 'r') as file:
             for line in file:
                 if line_length is None:
@@ -22,8 +24,9 @@ def load_board(file_path):
                     return None
                 board.append(board_line)
         return board
+    
     except Exception as e:
-        print(f"Error loading board: {e}")
+        showError(f"Error loading board: {e}")
         return None
 
 def save_board_to_file(game, file_path):
