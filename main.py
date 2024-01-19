@@ -9,6 +9,19 @@ from board_loader import load_board, save_board_to_file
 from gui_helpers import *
 from constants import *
 
+def draw_board(screen, game):
+    for y in range(game.board.shape[0]):
+        for x in range(game.board.shape[1]):
+            rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+            if game.board[y, x] == 1:
+                pygame.draw.rect(screen, ALIVE_COLOR, rect)
+            else:
+                pygame.draw.rect(screen, DEAD_COLOR, rect)
+
+START_SCREEN = 1
+MIDDLE_SCREEN = 2
+GAME = 3
+
 def main():
     global ALIVE_COLOR
     global DEAD_COLOR
@@ -18,21 +31,31 @@ def main():
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption("klaudusia's Game of Life")
     font = pygame.font.SysFont(None, 55)
-    
-    game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, randomize=True)
-    in_start_screen = True
+
+    current_state = START_SCREEN
+    game = None
     paused = False
-    speed = 10  # Speed of the game
-
+    speed = 10
+    
     while True:
-        if in_start_screen:
-            start_game = show_start_screen(screen, font)
-            if not start_game:
+        if current_state == START_SCREEN:
+            action = show_start_screen(screen, font)
+            if action == 'start':
+                current_state = MIDDLE_SCREEN
+            elif action == 'exit':
                 break
-            in_start_screen = False
-        else:
-            screen.fill(BLACK)
 
+        elif current_state == MIDDLE_SCREEN:
+            action = show_middle_screen(screen, font)
+            if action == 'back':
+                current_state = START_SCREEN
+            elif action == 'normal_rules':
+                current_state = GAME
+            # REMEMBER ABOUT CUSTOM RULES!
+
+        elif current_state == GAME:
+            if game is None:  # Initialize the game if not already done
+                game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, randomize=True)  # Adjust parameters as needed
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -91,6 +114,8 @@ def main():
 
             pygame.display.flip()
             clock.tick(speed) # Controls the speed
+            
+    pygame.quit()
 
 if __name__ == "__main__":
     main()

@@ -31,10 +31,10 @@ class GameOfLife:
         new_board = self.board.copy()
         for i in range(self.board.shape[0]):
             for j in range(self.board.shape[1]):
-                new_board[i, j] = self._update_cell(i, j)
+                new_board[i, j] = self.update_cell(i, j)
         self.board = new_board
 
-    def _update_cell(self, x, y):
+    def update_cell(self, x, y):
         num_alive_neighbors = sum([self.board[i, j] for i in range(x-1, x+2)
                                    for j in range(y-1, y+2) if (i != x or j != y) and 0 <= i < self.board.shape[0] and 0 <= j < self.board.shape[1]])
         
@@ -42,9 +42,6 @@ class GameOfLife:
             return 1 if num_alive_neighbors in self.survival_rules else 0
         else:
             return 1 if num_alive_neighbors in self.birth_rules else 0
-
-    def get_board(self):
-        return self.board
     
     def is_board_valid(self):
         if not isinstance(self.board, np.ndarray):
