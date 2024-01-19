@@ -21,6 +21,8 @@ def draw_board(screen, game):
 START_SCREEN = 1
 MIDDLE_SCREEN = 2
 GAME = 3
+INPUT_BOX = 4
+CUSTOM_GAME = 5
 
 def main():
     global ALIVE_COLOR
@@ -30,7 +32,7 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption("klaudusia's Game of Life")
-    font = pygame.font.SysFont(None, 55)
+    font = pygame.font.Font('ka1.ttf', 50)
 
     current_state = START_SCREEN
     game = None
@@ -51,11 +53,22 @@ def main():
                 current_state = START_SCREEN
             elif action == 'normal_rules':
                 current_state = GAME
-            # REMEMBER ABOUT CUSTOM RULES!
+            elif action == 'custom_rules':
+                current_state = INPUT_BOX
+        
+        elif current_state == INPUT_BOX:
+            action, custom_survival_rules, custom_birth_rules = input_box(screen, font)
+            if action == 'back':
+                current_state = MIDDLE_SCREEN
+            if action == "custom_game":
+                current_state = CUSTOM_GAME
 
-        elif current_state == GAME:
+        elif current_state == GAME or current_state == CUSTOM_GAME:
             if game is None:  # Initialize the game if not already done
-                game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, randomize=True)  # Adjust parameters as needed
+                if current_state == GAME:
+                    game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, randomize=True) 
+                elif current_state == CUSTOM_GAME:
+                    game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, randomize=True, survival_rules=custom_survival_rules, birth_rules=custom_birth_rules) 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -77,7 +90,10 @@ def main():
                     elif event.key == pygame.K_DOWN:  # Decrease speed
                         speed = max(5, speed - 5)
                     elif event.key == pygame.K_r:  # Randomize board
-                        game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, randomize=True)
+                        if current_state == GAME:
+                            game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, randomize=True) 
+                        elif current_state == CUSTOM_GAME:
+                            game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, randomize=True, survival_rules=custom_survival_rules, birth_rules=custom_birth_rules) 
                     elif event.key == pygame.K_p:  # Pause or resume the game
                         paused = not paused
                     elif event.key == pygame.K_1:  # Load board from file - glider
@@ -96,7 +112,7 @@ def main():
                         if board:
                             game = GameOfLife(WINDOW_WIDTH // CELL_SIZE, WINDOW_HEIGHT // CELL_SIZE, file_path=file_path)
                     elif event.key == pygame.K_ESCAPE:  # Return to the start screen
-                            in_start_screen = True
+                            current_state = MIDDLE_SCREEN
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
                     cell_x, cell_y = mouse_pos[0] // CELL_SIZE, mouse_pos[1] // CELL_SIZE
