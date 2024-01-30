@@ -32,7 +32,7 @@ You can also refer to the included `key_commands.png` for the list of keyboard a
 3. Run the game: `python main.py`
 
 ## Credits and Acknowledgments 🌟
-- Background art provided in `background_image_1.png`.
+- Background art designed by AI provided in `background_image_1.png`.
 - Custom pixel font utilized from `pixel_font.ttf`.
 - Game logic and UI handled by `game.py` and `gui_helpers.py`.
 - Preconfigured boards and game settings can be loaded with `board_loader.py`.

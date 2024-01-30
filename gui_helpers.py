@@ -196,18 +196,18 @@ def input_box(screen, font):
                 if active_box == 'survival':
                     if event.key == pygame.K_BACKSPACE:
                         survival_text = survival_text[:-1]
-                    elif event.unicode.isdigit() and len(survival_text) < 6:
+                    elif event.unicode.isdigit() and len(survival_text) < 8:
                         survival_text += event.unicode
-                    elif event.unicode.isdigit() and len(survival_text) >= 6:
+                    elif event.unicode.isdigit() and len(survival_text) >= 8:
                         pass
                     elif event.key == pygame.K_ESCAPE:
                         return ("back", [2, 3], [3])
                 elif active_box == 'birth':
                     if event.key == pygame.K_BACKSPACE:
                         birth_text = birth_text[:-1]
-                    elif event.unicode.isdigit() and len(birth_text) < 6:
+                    elif event.unicode.isdigit() and len(birth_text) < 8:
                         birth_text += event.unicode
-                    elif event.unicode.isdigit() and len(birth_text) >= 6:
+                    elif event.unicode.isdigit() and len(birth_text) >= 8:
                         pass
                     elif event.key == pygame.K_ESCAPE:
                         return ("back", [2, 3], [3])
