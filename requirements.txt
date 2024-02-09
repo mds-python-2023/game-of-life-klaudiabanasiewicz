@@ -4,3 +4,7 @@
 # numpy
 # matplotlib
 # pygame
+
+numpy
+pygame
+tkinter
